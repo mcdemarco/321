@@ -172,6 +172,8 @@ d    h5, h6 {
 	 div.rule {display:none;}
 	 div.rule.on {display:block;}
 	 td {border: 1px solid gray;}
+	 td:nth-child(even), input {text-align: right;}
+	 input {width: 25px;}
   </style>
 
   <!--[if lt IE 9]>
@@ -182,8 +184,8 @@ d    h5, h6 {
 <p><img src="images/zoningoutheader.svg" width="600"></p>
 <h1 id="zoning-out">Zoning Out Randomizer</h1>
 <p>Zoning Out is a city building game for 1 or more players by Spencer Cappallo.
-This randomizer will choose the random rules for you and provides a scoresheet.  
-For your convenience, the official rules are included.</p>
+This randomizer will choose the random rules for you and provides a working scoresheet.  
+For your convenience, the official rules are also included.</p>
 
 <details>
   <summary>Rules</summary>
@@ -230,6 +232,11 @@ place the piece you drew due to there being no legal, valid placements,
 return that piece and draw a piece of a different size.</p>
 <p>When you have placed all your pyramids, proceed to scoring your new
 city.</p>
+</details>
+
+<details>
+<summary>Scoring</summary>
+
 <h2 id="scoring">Scoring</h2>
 <p>Scoring is as follows: - Find your largest connected group (remember:
 no diagonals) in each of red, blue, green, and yellow. Each of these
@@ -256,6 +263,12 @@ our game. <img src="images/basic_scoring.svg" width="500"></p>
 </blockquote>
 <p>There is a <a href="#scoring-sheet">scoring sheet</a> at the end of
 this document that you can use for calculating your score.</p>
+<hr />
+</details>
+
+<details>
+	<summary>Variants</summary>
+
 <h2 id="multiplayer">Multiplayer</h2>
 <p>Though designed as a single player experience, there are a couple
 ways to play Zoning Out with more than one player.</p>
@@ -277,11 +290,7 @@ play next. All players must then add that same piece type to their city
 <p>Play continues this way until all pieces have been placed. Players
 score their own city following the usual scoring procedure. Whichever
 player has the highest valued city is the winner.</p>
-<hr />
-</details>
 
-<details>
-	<summary>Variants</summary>
 	<h2 id="variants">Variants</h2>
 	<h3 id="apc-analysis-paralysis-commission">APC: Analysis Paralysis
 Commission</h3>
@@ -307,6 +316,8 @@ from a hat.</p>
 <hr />
 </details>
 
+<h2>Randomized Scoring Rules</h2>
+
 <p style="display:none;"><a href="#15-minute-city">15-Minute City</a> | <a
 href="#density-bonusing">Density Bonusing</a> | <a
 href="#rainbow-rows">Rainbow Rows</a> | <a
@@ -323,7 +334,7 @@ on the Outside</a> | <a href="#mixed-use-development">Mixed-Use
 Development</a> | <a href="#room-to-make-a-big-mistake">Room to make a
 Big Mistake</a></p>
 
-<div class="rule on" id="rr1">
+<div class="rule on" id="rr1" data-target="13">
 
 <h3 id="minute-city">15-Minute City</h3>
 <p><img src="images/15min.svg" width=300></p>
@@ -332,7 +343,7 @@ Big Mistake</a></p>
 <p><strong>Target Score</strong>: 13</p>
 </div>
 
-<div class="rule on" id="rr2">
+<div class="rule on" id="rr2" data-target="-4">
 
 <h3 id="density-bonusing">Density Bonusing</h3>
 <p><img src="images/density.svg" width=300></p>
@@ -341,7 +352,7 @@ whichever is larger.</p>
 <p><strong>Target Score</strong>: -4</p>
 </div>
 
-<div class="rule on" id="rr3">
+<div class="rule on" id="rr3" data-target="15">
 
 <h3 id="rainbow-rows">Rainbow Rows</h3>
 <p><img src="images/rainbow_rows.svg" width=300></p>
@@ -350,7 +361,7 @@ one piece in all five colors in it.</p>
 <p><strong>Target Score</strong>: 15</p>
 </div>
 
-<div class="rule" id="rr4">
+<div class="rule" id="rr4" data-target="15">
 
 <h3 id="colorful-columns">Colorful Columns</h3>
 <p><img src="images/colorful_columns.svg" width=300></p>
@@ -359,7 +370,7 @@ one piece in all five colors in it.</p>
 <p><strong>Target Score</strong>: 15</p>
 </div>
 
-<div class="rule" id="rr5">
+<div class="rule" id="rr5" data-target="-5">
 
 <h3 id="overshadowed">Overshadowed</h3>
 <p><img src="images/overshadowed.svg" width=300></p>
@@ -367,7 +378,7 @@ one piece in all five colors in it.</p>
 <p><strong>Target Score</strong>: -5</p>
 </div>
 
-<div class="rule" id="rr6">
+<div class="rule" id="rr6" data-target="9">
 
 <h3 id="little-boxes">Little Boxes</h3>
 <p><img src="images/little_boxes.svg" width=300></p>
@@ -376,7 +387,7 @@ may overlap.</p>
 <p><strong>Target Score</strong>: 9</p>
 </div>
 
-<div class="rule" id="rr7">
+<div class="rule" id="rr7" data-target="9">
 
 <h3 id="shopping-district">Shopping District</h3>
 <p><img src="images/shopping_district.svg" width=300></p>
@@ -385,7 +396,7 @@ Squares may overlap.</p>
 <p><strong>Target Score</strong>: 9</p>
 </div>
 
-<div class="rule" id="rr8">
+<div class="rule" id="rr8" data-target="13">
 
 <h3 id="linear-park">Linear Park</h3>
 <p><img src="images/linear_park.svg" width=300></p>
@@ -395,7 +406,7 @@ count.</p>
 <p><strong>Target Score</strong>: 13</p>
 </div>
 
-<div class="rule" id="rr9">
+<div class="rule" id="rr9" data-target="19">
 
 <h3 id="we-compost">“We Compost”</h3>
 <p><img src="images/we_compost.svg" width=300></p>
@@ -405,7 +416,7 @@ more reds would score +3 points.</p>
 <p><strong>Target Score</strong>: 19</p>
 </div>
 
-<div class="rule" id="rr10">
+<div class="rule" id="rr10" data-target="17">
 
 <h3 id="garden-city">Garden City</h3>
 <p><img src="images/garden_city.svg" width=300></p>
@@ -413,7 +424,7 @@ more reds would score +3 points.</p>
 <p><strong>Target Score</strong>: 17</p>
 </div>
 
-<div class="rule" id="rr11">
+<div class="rule" id="rr11" data-target="23">
 
 <h3 id="piazzas">Piazzas</h3>
 <p><img src="images/piazzas.svg" width=300></p>
@@ -422,7 +433,7 @@ enclosed empty space within your city.</p>
 <p><strong>Target Score</strong>: 23</p>
 </div>
 
-<div class="rule" id="rr12">
+<div class="rule" id="rr12" data-target="17">
 
 <h3 id="canadian-style">Canadian Style</h3>
 <p><img src="images/canadian_style.svg" width=300></p>
@@ -432,7 +443,7 @@ group of large pieces, disregarding color.</p>
 <p><strong>Target Score</strong>: 17</p>
 </div>
 
-<div class="rule" id="rr13">
+<div class="rule" id="rr13" data-target="4">
 
 <h3 id="factory-un-fun">Factory Un-fun</h3>
 <p><img src="images/factory_unfun.svg" width=300></p>
@@ -440,7 +451,7 @@ group of large pieces, disregarding color.</p>
 <p><strong>Target Score</strong>: 4</p>
 </div>
 
-<div class="rule" id="rr14">
+<div class="rule" id="rr14" data-target="4">
 
 <h3 id="lines-of-sight">Lines of Sight</h3>
 <p><img src="images/lines_of_sight.svg" width=300></p>
@@ -450,7 +461,7 @@ it.</p>
 <p><strong>Target Score</strong>: 4</p>
 </div>
 
-<div class="rule" id="rr15">
+<div class="rule" id="rr15" data-target="9">
 
 <h3 id="clusters">Clusters</h3>
 <p><img src="images/clusters.svg" width=300></p>
@@ -460,7 +471,7 @@ pieces. -1 point for every group not composed thusly.</p>
 <p><strong>Target Score</strong>: 9</p>
 </div>
 
-<div class="rule" id="rr16">
+<div class="rule" id="rr16" data-target="15">
 
 <h3 id="bigger-on-the-outside">Bigger on the Outside</h3>
 <p><img src="images/bigger_on_the_outside.svg" width=300></p>
@@ -469,7 +480,7 @@ the top and bottom, left and right, respectively.</p>
 <p><strong>Target Score</strong>: 15</p>
 </div>
 
-<div class="rule" id="rr17">
+<div class="rule" id="rr17" data-target="7">
 
 <h3 id="mixed-use-development">Mixed-Use Development</h3>
 <p><img src="images/mixed_use.svg" width=300></p>
@@ -483,7 +494,7 @@ stacked on top of the larger piece.</p>
 <p><strong>Target Score</strong>: 7</p>
 </div>
 
-<div class="rule" id="rr18">
+<div class="rule" id="rr18" data-target="17">
 
 <h3 id="room-to-make-a-big-mistake">Room to make a Big Mistake</h3>
 <p><img src="images/room_to_make_a_big_mistake.svg" width=300></p>
@@ -495,64 +506,58 @@ stacked on top of the larger piece.</p>
 <h2 id="scoring-sheet">Scoring Sheet</h2>
 <p>This table will calculate your score:</p>
 <table>
-<thead>
-<tr class="header">
-<th>…</th>
-<th>Score</th>
-</tr>
-</thead>
 <tbody>
-<tr class="odd">
-<td>Residential (red)</td>
-<td></td>
+<tr>
+<td>Residential (red) largest group</td>
+<td><input class="colorScore" id="color1" type="text"/></td>
 </tr>
-<tr class="even">
-<td>Industrial (yellow)</td>
-<td></td>
+<tr>
+<td>Industrial (yellow) largest group</td>
+<td><input class="colorScore" id="color2" type="text"/></td>
 </tr>
-<tr class="odd">
-<td>Commercial (blue)</td>
-<td></td>
+<tr>
+<td>Commercial (blue) largest group</td>
+<td><input class="colorScore" id="color3" type="text"/></td>
 </tr>
-<tr class="even">
-<td>Green space (green)</td>
-<td></td>
+<tr>
+<td>Green space (green) largest group</td>
+<td><input class="colorScore" id="color4" type="text"/></td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>Colors SUM</strong></td>
-<td></td>
+<td><b id="colorSubtotal"></b></td>
 </tr>
-<tr class="even">
-<td>Black</td>
-<td></td>
+<tr>
+<td>Black (sum of size &times; neighbors)</td>
+<td><input id="blackScore" type="text"/></td></td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>(Colors - Black) Subtotal</strong></td>
-<td></td>
+<td><b id="clackSubtotal"></b></td>
 </tr>
-<tr class="even">
-<td>Scoring Rule #1</td>
-<td></td>
+<tr>
+	<td>Rule #1: <span id="sr0"></span> </td>
+	<td><input class="ruleScore" id="rule1" type="text"/></td>
 </tr>
-<tr class="odd">
-<td>Scoring Rule #2</td>
-<td></td>
+<tr>
+	<td>Rule #2: <span id="sr1"></span></td>
+	<td><input class="ruleScore" id="rule2" type="text"/></td>
 </tr>
-<tr class="even">
-<td>Scoring Rule #3</td>
-<td></td>
+<tr>
+	<td>Rule #3: <span id="sr2"></span></td>
+	<td><input class="ruleScore" id="rule3" type="text"/></td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>Scoring Rules SUM</strong></td>
-<td></td>
+<td><b id="ruleSubtotal"></b></td>
 </tr>
-<tr class="even">
+<tr>
 <td><em>Scoring Rules Targets SUM</em></td>
-<td></td>
+<td><em id="targetSUM"></em></td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>Total</strong></td>
-<td></td>
+<td><b id="total"></b></td>
 </tr>
 </tbody>
 </table>
@@ -565,20 +570,62 @@ stacked on top of the larger piece.</p>
  }
 
  function randomizer() {
-	 //Clear existing class.
-	 const rules = document.querySelectorAll("div.rule");
-	 rules.forEach( rule => {
-		 rule.classList.remove("on");
-	 });
-	 //Select new rules.
-	 const newRuleIds = getRandom();
-	 newRuleIds.forEach( number => {
-		 document.querySelector("div#rr" + number).classList.add("on");
-	 });
+   //Clear existing class.
+   const rules = document.querySelectorAll("div.rule");
+   rules.forEach( rule => {
+     rule.classList.remove("on");
+   });
+   //Select new rules.
+   const newRuleIds = getRandom();
+   var target = 0;
+   newRuleIds.forEach( (number, index) => {
+     var ruleDiv = document.querySelector("div#rr" + number);
+     ruleDiv.classList.add("on");
+     document.querySelector("span#sr" + index).innerText = ruleDiv.querySelector("h3").innerText;
+     target += parseInt(ruleDiv.getAttribute("data-target"));
+   });
+   document.querySelector("#targetSUM").innerText = target;
  };
- window.onload= (event) => {
+
+ function summer(array) {
+  var colorTotal = 0;
+
+  document.querySelectorAll('input.colorScore').forEach((elt) => { 
+    colorTotal += parseInt(elt.value) || 0;
+  })
+
+  document.querySelector("#colorSubtotal").innerText = colorTotal;
+
+  var blackTotal = parseInt(document.querySelector("#blackScore").value) || 0;
+
+  document.querySelector("#clackSubtotal").innerText = (colorTotal - blackTotal);
+
+  var ruleTotal = 0;
+  document.querySelectorAll('input.ruleScore').forEach((elt) => { 
+    ruleTotal += parseInt(elt.value) || 0;
+  })
+
+  document.querySelector("#ruleSubtotal").innerText = ruleTotal;
+
+  const total = (colorTotal - blackTotal) + ruleTotal;
+
+  document.querySelector("#total").innerText = total;
+
+  const target = parseInt(document.querySelector("#targetSUM").innerText) || 0;
+
+  document.querySelector("#total").style.color = (target > total) ? "red" : "green";
+
+ }   
+
+ function updateScores() {
+ }
+ 
+ window.onload = (event) => {
   randomizer();
+//  summer();
  };
+
+document.querySelector("table").addEventListener('input', summer);
 </script>
 </body>
 </html>
