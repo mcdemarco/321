@@ -183,7 +183,7 @@ d    h5, h6 {
 <body>
 <p><img src="images/zoningoutheader.svg" width="600"></p>
 <h1 id="zoning-out">Zoning Out Randomizer</h1>
-<p>Zoning Out is a city building game for 1 or more players by Spencer Cappallo.
+<p>Zoning Out is a city building pyramid game for 1 or more players by Spencer Cappallo.
 This randomizer will choose the random rules for you and provides a working scoresheet.  
 For your convenience, the official rules are also included.</p>
 
@@ -316,9 +316,15 @@ from a hat.</p>
 <hr />
 </details>
 
-<h2>Randomized Scoring Rules</h2>
+<h2>Selected Scoring Rules</h2>
 
-<p style="display:none;"><a href="#15-minute-city">15-Minute City</a> | <a
+<button type="button" id="randomize">Randomize</button>
+
+<p id="ruleList" style="display:none;">
+
+<button type="button" id="manual">Select manually</button>
+
+<a href="#15-minute-city">15-Minute City</a> | <a
 href="#density-bonusing">Density Bonusing</a> | <a
 href="#rainbow-rows">Rainbow Rows</a> | <a
 href="#colorful-columns">Colorful Columns</a> | <a
@@ -525,7 +531,7 @@ stacked on top of the larger piece.</p>
 </tr>
 <tr>
 <td><strong>Colors SUM</strong></td>
-<td><b id="colorSubtotal"></b></td>
+<td><b id="colorSubtotal" class="calced"></b></td>
 </tr>
 <tr>
 <td>Black (sum of size &times; neighbors)</td>
@@ -533,7 +539,7 @@ stacked on top of the larger piece.</p>
 </tr>
 <tr>
 <td><strong>(Colors - Black) Subtotal</strong></td>
-<td><b id="clackSubtotal"></b></td>
+<td><b id="clackSubtotal" class="calced"></b></td>
 </tr>
 <tr>
 	<td>Rule #1: <span id="sr0"></span> </td>
@@ -549,7 +555,7 @@ stacked on top of the larger piece.</p>
 </tr>
 <tr>
 <td><strong>Scoring Rules SUM</strong></td>
-<td><b id="ruleSubtotal"></b></td>
+<td><b id="ruleSubtotal" class="calced"></b></td>
 </tr>
 <tr>
 <td><em>Scoring Rules Targets SUM</em></td>
@@ -557,27 +563,52 @@ stacked on top of the larger piece.</p>
 </tr>
 <tr>
 <td><strong>Total</strong></td>
-<td><b id="total"></b></td>
+<td><b id="total" class="calced"></b></td>
 </tr>
 </tbody>
 </table>
 
 <script type="text/javascript">
- function getRandom() {
-	 const arr = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18];
-   const shuffled = [...arr].sort(() => 0.5 - Math.random());
-   return shuffled.slice(0, 3);
+
+ function shuffle(array) {
+    for (var i = array.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
  }
 
- function randomizer() {
+ function getRandom() {
+   const arr = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18];
+   shuffle(arr);
+   return arr.slice(0, 3);
+ }
+
+ function cleaner() {
    //Clear existing class.
    const rules = document.querySelectorAll("div.rule");
    rules.forEach( rule => {
      rule.classList.remove("on");
    });
+   document.querySelectorAll("input").forEach( inp => {
+     inp.value = "";
+   });
+  document.querySelectorAll(".calced").forEach( elt => {
+     elt.innerText = "";
+   });
+ }
+
+ function randomize() {
    //Select new rules.
    const newRuleIds = getRandom();
+   setter(newRuleIds);
+ }
+
+ function setter(ruleIds) {
+   cleaner();
    var target = 0;
+   const newRuleIds = ruleIds.sort(function (a, b) {return a - b;});
    newRuleIds.forEach( (number, index) => {
      var ruleDiv = document.querySelector("div#rr" + number);
      ruleDiv.classList.add("on");
@@ -585,47 +616,49 @@ stacked on top of the larger piece.</p>
      target += parseInt(ruleDiv.getAttribute("data-target"));
    });
    document.querySelector("#targetSUM").innerText = target;
+
+   window.history.replaceState( {} , "Selected rules", window.location.origin + window.location.pathname + "?" + newRuleIds.join(","));
  };
 
- function summer(array) {
+ function summer() {
   var colorTotal = 0;
-
   document.querySelectorAll('input.colorScore').forEach((elt) => { 
     colorTotal += parseInt(elt.value) || 0;
-  })
-
+  });
   document.querySelector("#colorSubtotal").innerText = colorTotal;
 
   var blackTotal = parseInt(document.querySelector("#blackScore").value) || 0;
-
   document.querySelector("#clackSubtotal").innerText = (colorTotal - blackTotal);
 
   var ruleTotal = 0;
   document.querySelectorAll('input.ruleScore').forEach((elt) => { 
     ruleTotal += parseInt(elt.value) || 0;
-  })
-
+  });
   document.querySelector("#ruleSubtotal").innerText = ruleTotal;
 
   const total = (colorTotal - blackTotal) + ruleTotal;
-
   document.querySelector("#total").innerText = total;
-
   const target = parseInt(document.querySelector("#targetSUM").innerText) || 0;
-
   document.querySelector("#total").style.color = (target > total) ? "red" : "green";
-
  }   
 
  function updateScores() {
  }
  
  window.onload = (event) => {
-  randomizer();
-//  summer();
+  if (window.location.search) {
+   try {
+      const newRuleIds = (window.location.search.split("?")[1]).split(",");
+      setter(newRuleIds);
+   } catch(e) {
+      randomize();
+   }
+  } else
+    randomize();
  };
 
 document.querySelector("table").addEventListener('input', summer);
+document.querySelector("#randomize").addEventListener('click', randomize);
 </script>
 </body>
 </html>
