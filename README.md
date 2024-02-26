@@ -8,3 +8,7 @@
 3. [Love Triangle](lovetriangle.md) is a lightweight dice-rolling affair of chained incentives for three players.
 
 All games designed by Spencer Cappallo, though **Zoning Out** and **A River in Egypt** owe great debts to **Sprawlopolis** and **Schotten-Totten**.
+
+<hr />
+
+This fork provides a [randomizer](zoningoutrandomizer.html) for Zoning Out.
