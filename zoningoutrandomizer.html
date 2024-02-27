@@ -171,9 +171,23 @@ d    h5, h6 {
 	<style>
 	 div.rule {display:none;}
 	 div.rule.on {display:block;}
-	 td {border: 1px solid gray;}
+	 td {border: 1px solid #cecece;}
 	 td:nth-child(even), input {text-align: right;}
-	 input {width: 25px;}
+	 table input {width: 25px;}
+	 div#ruleList {
+		 display: none; /*grid is intended*/
+		 grid-template-columns: 1fr 1fr 1fr; 
+		 margin: 20px 10px;}
+	 div#ruleList label {
+		 display: inline-block; 
+		 white-space: nowrap; 
+		 margin-right: 25px;}
+	 button#unmanual {display: none;}
+   @media (max-width: 600px) {
+		 div#ruleList {
+			 grid-template-columns: 1fr 1fr;
+		 }
+	 }
   </style>
 
   <!--[if lt IE 9]>
@@ -183,9 +197,13 @@ d    h5, h6 {
 <body>
 <p><img src="images/zoningoutheader.svg" width="600"></p>
 <h1 id="zoning-out">Zoning Out Randomizer</h1>
-<p>Zoning Out is a city building pyramid game for 1 or more players by Spencer Cappallo.
-This randomizer will choose the random rules for you and provides a working scoresheet.  
-For your convenience, the official rules are also included.</p>
+<p>Zoning Out is a city building pyramid game for 1 or more players by Spencer Cappallo,
+	along the lines of Sprawlopolis.</p>
+
+<p>The game uses variable goals, called <em>scoring rules</em>, which this
+ randomizer can choose at random.  It can can also import or select specific rules,  
+ and includes a working scoresheet.</p>
+<p>For your convenience, the official rules are reproduced below:</p>
 
 <details>
   <summary>Rules</summary>
@@ -220,16 +238,23 @@ rules of thumb can vary, however.</p>
 written on them. The sum of all three target scores will determine the
 score you need to win.</p>
 <h2 id="game-play">Game Play</h2>
-<p>Every turn you will: - Choose which size of pyramid to place - Draw a
-random pyramid of that size (by feel if using a single bag) - Place that
-pyramid next to a pyramid that’s already been placed – except for your
-first turn, where there will of course be no other pyramids in play. -
-<strong>IMPORTANT: You may NEVER place a pyramid next to another pyramid
-of the same size</strong> - <strong>IMPORTANT: Diagonals do not exist in
-Zoning Out.</strong> You may never place diagonally, and all scoring
-rules ignore diagonals. - In the unlikely event that you are unable to
-place the piece you drew due to there being no legal, valid placements,
-return that piece and draw a piece of a different size.</p>
+<p>Every turn you will:</p>
+<ul>
+<li>Choose which size of pyramid to place</li>
+<li>Draw a random pyramid of that size (by feel if using a single
+bag)</li>
+<li>Place that pyramid next to a pyramid that's already been placed --
+except for your first turn, where there will of course be no other
+pyramids in play.</li>
+<li><strong>IMPORTANT: You may NEVER place a pyramid next to another
+pyramid of the same size</strong></li>
+<li><strong>IMPORTANT: Diagonals do not exist in Zoning Out.</strong>
+	You may never place diagonally, and all scoring rules ignore
+	diagonals.</li>
+<li>In the unlikely event that you are unable to place the piece you
+	drew due to there being no legal, valid placements, return that piece
+	and draw a piece of a different size.</li>
+</ul>
 <p>When you have placed all your pyramids, proceed to scoring your new
 city.</p>
 </details>
@@ -238,18 +263,22 @@ city.</p>
 <summary>Scoring</summary>
 
 <h2 id="scoring">Scoring</h2>
-<p>Scoring is as follows: - Find your largest connected group (remember:
-no diagonals) in each of red, blue, green, and yellow. Each of these
-groups scores 1 point for every pyramid within it. - Now score your
-black pyramids. Black pyramids score negatively. They subtract a value
-equal to their (size) x (the number of pyramids next to them). So, a
-3-pip (large) black pyramid with two other pyramids next to it (of any
-color), would score -(3*2) = -6 points - Next, score your three <a
-href="#special-scoring-rules">special scoring rules</a>. These scoring
-rules will have the details of how they score written on them. -
-Finally, tally up your score. If your score is equal to or higher than
-the sum of the target scores on all three scoring rules, you win. If
-it’s lower, you’ve lost.</p>
+<p>Scoring is as follows:</p>
+<ul>
+<li>Find your largest connected group (remember: no diagonals) in each
+of red, blue, green, and yellow. Each of these groups scores 1 point for
+every pyramid within it.</li>
+<li>Now score your black pyramids. Black pyramids score negatively. They
+subtract a value equal to their (size) x (the number of pyramids next to
+them). So, a 3-pip (large) black pyramid with two other pyramids next to
+it (of any color), would score -(3*2) = -6 points</li>
+<li>Next, score your three <a href="#special-scoring-rules">special
+scoring rules</a>. These scoring rules will have the details of how they
+score written on them.</li>
+<li>Finally, tally up your score. If your score is equal to or higher
+than the sum of the target scores on all three scoring rules, you win.
+If it's lower, you've lost.</li>
+</ul>
 <blockquote>
 <p><strong>Scoring Example</strong> In this example game (played using
 fewer than normal pyramids for illustrative purposes), we would score
@@ -318,27 +347,28 @@ from a hat.</p>
 
 <h2>Selected Scoring Rules</h2>
 
-<button type="button" id="randomize">Randomize</button>
+<button type="button" id="randomize">Randomize</button> <button type="button" id="manual">Select manually</button> <button type="button" id="unmanual">Hide selection list</button>
 
-<p id="ruleList" style="display:none;">
-
-<button type="button" id="manual">Select manually</button>
-
-<a href="#15-minute-city">15-Minute City</a> | <a
-href="#density-bonusing">Density Bonusing</a> | <a
-href="#rainbow-rows">Rainbow Rows</a> | <a
-href="#colorful-columns">Colorful Columns</a> | <a
-href="#overshadowed">Overshadowed</a> | <a href="#little-boxes">Little
-Boxes</a> | <a href="#shopping-district">Shopping District</a> | <a
-href="#linear-park">Linear Park</a> | <a href="#we-compost">“We
-Compost”</a> | <a href="#garden-city">Garden City</a> | <a
-href="#piazzas">Piazzas</a> | <a href="#canadian-style">Canadian
-Style</a> | <a href="#factory-un-fun">Factory Un-fun</a> | <a
-href="#lines-of-sight">Lines of Sight</a> | <a
-href="#clusters">Clusters</a> | <a href="#bigger-on-the-outside">Bigger
-on the Outside</a> | <a href="#mixed-use-development">Mixed-Use
-Development</a> | <a href="#room-to-make-a-big-mistake">Room to make a
-Big Mistake</a></p>
+<div id="ruleList">
+ <label><input data-ruleid="1" type="checkbox" id="#15-minute-city">&nbsp;15-Minute City</label> 
+ <label><input data-ruleid="2" type="checkbox" id="#density-bonusing">&nbsp;Density Bonusing</label> 
+ <label><input data-ruleid="3" type="checkbox" id="#rainbow-rows">&nbsp;Rainbow Rows</label> 
+ <label><input data-ruleid="4" type="checkbox" id="#colorful-columns">&nbsp;Colorful Columns</label> 
+ <label><input data-ruleid="5" type="checkbox" id="#overshadowed">&nbsp;Overshadowed</label> 
+ <label><input data-ruleid="6" type="checkbox" id="#little-boxes">&nbsp;Little Boxes</label> 
+ <label><input data-ruleid="7" type="checkbox" id="#shopping-district">&nbsp;Shopping District</label> 
+ <label><input data-ruleid="8" type="checkbox" id="#linear-park">&nbsp;Linear Park</label> 
+ <label><input data-ruleid="9" type="checkbox" id="#we-compost">&nbsp;“We Compost”</label> 
+ <label><input data-ruleid="10" type="checkbox" id="#garden-city">&nbsp;Garden City</label> 
+ <label><input data-ruleid="11" type="checkbox" id="#piazzas">&nbsp;Piazzas</label> 
+ <label><input data-ruleid="12" type="checkbox" id="#canadian-style">&nbsp;Canadian Style</label> 
+ <label><input data-ruleid="13" type="checkbox" id="#factory-un-fun">&nbsp;Factory Un-fun</label> 
+ <label><input data-ruleid="14" type="checkbox" id="#lines-of-sight">&nbsp;Lines of Sight</label> 
+ <label><input data-ruleid="15" type="checkbox" id="#clusters">&nbsp;Clusters</label> 
+ <label><input data-ruleid="16" type="checkbox" id="#bigger-on-the-outside">&nbsp;Bigger on the Outside</label> 
+ <label><input data-ruleid="17" type="checkbox" id="#mixed-use-development">&nbsp;Mixed-Use Development</label> 
+ <label><input data-ruleid="18" type="checkbox" id="#room-to-make-a-big-mistake">&nbsp;Room to make a Big Mistake</label>
+</div>
 
 <div class="rule on" id="rr1" data-target="13">
 
@@ -558,8 +588,8 @@ stacked on top of the larger piece.</p>
 <td><b id="ruleSubtotal" class="calced"></b></td>
 </tr>
 <tr>
-<td><em>Scoring Rules Targets SUM</em></td>
-<td><em id="targetSUM"></em></td>
+	<td><em>Scoring Rules Targets SUM</em></td>
+	<td><em id="targetSUM" class="calced"></em></td>
 </tr>
 <tr>
 <td><strong>Total</strong></td>
@@ -571,12 +601,12 @@ stacked on top of the larger piece.</p>
 <script type="text/javascript">
 
  function shuffle(array) {
-    for (var i = array.length - 1; i > 0; i--) {
-        var j = Math.floor(Math.random() * (i + 1));
-        var temp = array[i];
-        array[i] = array[j];
-        array[j] = temp;
-    }
+   for (var i = array.length - 1; i > 0; i--) {
+     var j = Math.floor(Math.random() * (i + 1));
+     var temp = array[i];
+     array[i] = array[j];
+     array[j] = temp;
+   }
  }
 
  function getRandom() {
@@ -594,7 +624,7 @@ stacked on top of the larger piece.</p>
    document.querySelectorAll("input").forEach( inp => {
      inp.value = "";
    });
-  document.querySelectorAll(".calced").forEach( elt => {
+   document.querySelectorAll(".calced").forEach( elt => {
      elt.innerText = "";
    });
  }
@@ -621,44 +651,83 @@ stacked on top of the larger piece.</p>
  };
 
  function summer() {
-  var colorTotal = 0;
-  document.querySelectorAll('input.colorScore').forEach((elt) => { 
-    colorTotal += parseInt(elt.value) || 0;
-  });
-  document.querySelector("#colorSubtotal").innerText = colorTotal;
+   var colorTotal = 0;
+   document.querySelectorAll('input.colorScore').forEach((elt) => { 
+     colorTotal += parseInt(elt.value) || 0;
+   });
+   document.querySelector("#colorSubtotal").innerText = colorTotal;
 
-  var blackTotal = parseInt(document.querySelector("#blackScore").value) || 0;
-  document.querySelector("#clackSubtotal").innerText = (colorTotal - blackTotal);
+   var blackTotal = parseInt(document.querySelector("#blackScore").value) || 0;
+   document.querySelector("#clackSubtotal").innerText = (colorTotal - blackTotal);
 
-  var ruleTotal = 0;
-  document.querySelectorAll('input.ruleScore').forEach((elt) => { 
-    ruleTotal += parseInt(elt.value) || 0;
-  });
-  document.querySelector("#ruleSubtotal").innerText = ruleTotal;
+   var ruleTotal = 0;
+   document.querySelectorAll('input.ruleScore').forEach((elt) => { 
+     ruleTotal += parseInt(elt.value) || 0;
+   });
+   document.querySelector("#ruleSubtotal").innerText = ruleTotal;
 
-  const total = (colorTotal - blackTotal) + ruleTotal;
-  document.querySelector("#total").innerText = total;
-  const target = parseInt(document.querySelector("#targetSUM").innerText) || 0;
-  document.querySelector("#total").style.color = (target > total) ? "red" : "green";
+   const total = (colorTotal - blackTotal) + ruleTotal;
+   document.querySelector("#total").innerText = total;
+   const target = parseInt(document.querySelector("#targetSUM").innerText) || 0;
+   document.querySelector("#total").style.color = (target > total) ? "red" : "green";
  }   
 
- function updateScores() {
+ function selectRules() {
+	 cleaner();
+	 document.querySelector("#ruleList").style.display = "grid";
+	 document.querySelectorAll("#ruleList input").forEach((elt) => {
+		 elt.checked = false;
+	 });
+	 document.querySelector("#unmanual").style.display = "inline-block";
+ }
+ 
+ function unselectRules() {
+	 document.querySelector("#ruleList").style.display = "none";
+	 document.querySelector("#unmanual").style.display = "none";
+ }
+ 
+ function selectRule(event) {
+	 //const ruleId = event.target.getAttribute("data-ruleid");
+
+	 //count rules
+	 const rules = document.querySelectorAll("div#ruleList input:checked");
+
+	 if (rules.length > 3) {
+		 alert("Too many rules.");
+		 event.target.checked = false;
+		 return;
+	 }
+
+	 //for simplicity we reset almost every time
+	 const ruleIds = [...rules].map(elt => elt.getAttribute("data-ruleid"));
+
+	 cleaner();
+	 ruleIds.forEach( (ruleId) => {
+		 document.querySelector("div#rr" + ruleId).classList.add("on");
+	 });
+
+	 if (rules.length == 3) {
+		 setter(ruleIds);
+	 }
  }
  
  window.onload = (event) => {
-  if (window.location.search) {
-   try {
-      const newRuleIds = (window.location.search.split("?")[1]).split(",");
-      setter(newRuleIds);
-   } catch(e) {
-      randomize();
-   }
-  } else
-    randomize();
+   if (window.location.search) {
+		 try {
+       const newRuleIds = (window.location.search.split("?")[1]).split(",");
+       setter(newRuleIds);
+		 } catch(e) {
+       randomize();
+		 }
+   } else
+     randomize();
  };
 
-document.querySelector("table").addEventListener('input', summer);
-document.querySelector("#randomize").addEventListener('click', randomize);
+ document.querySelector("table").addEventListener('input', summer);
+ document.querySelector("#randomize").addEventListener('click', randomize);
+ document.querySelector("#manual").addEventListener('click', selectRules);
+ document.querySelector("#unmanual").addEventListener('click', unselectRules);
+ document.querySelector("div#ruleList").addEventListener('change', selectRule);
 </script>
 </body>
 </html>
