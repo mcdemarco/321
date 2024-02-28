@@ -347,7 +347,7 @@ from a hat.</p>
 
 <h2>Selected Scoring Rules</h2>
 
-<button type="button" id="randomize">Randomize</button> <button type="button" id="manual">Select manually</button> <button type="button" id="unmanual">Hide selection list</button>
+<button type="button" id="randomize">Randomize</button> <button type="button" id="manual">Select manually</button> <button type="button" id="unmanual">Hide selection list</button> &nbsp; <label><input type="checkbox" id="smallCity">Small City variant</label>
 
 <div id="ruleList">
  <label><input data-ruleid="1" type="checkbox" id="#15-minute-city">&nbsp;15-Minute City</label> 
@@ -579,7 +579,7 @@ stacked on top of the larger piece.</p>
 	<td>Rule #2: <span id="sr1"></span></td>
 	<td><input class="ruleScore" id="rule2" type="text"/></td>
 </tr>
-<tr>
+<tr class="bigCity">
 	<td>Rule #3: <span id="sr2"></span></td>
 	<td><input class="ruleScore" id="rule3" type="text"/></td>
 </tr>
@@ -600,6 +600,10 @@ stacked on top of the larger piece.</p>
 
 <script type="text/javascript">
 
+ function getCitySize() {
+   return document.getElementById("smallCity").checked ? 2 : 3;
+ }
+
  function shuffle(array) {
    for (var i = array.length - 1; i > 0; i--) {
      var j = Math.floor(Math.random() * (i + 1));
@@ -612,7 +616,8 @@ stacked on top of the larger piece.</p>
  function getRandom() {
    const arr = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18];
    shuffle(arr);
-   return arr.slice(0, 3);
+   const citySize = getCitySize();
+   return arr.slice(0, citySize);
  }
 
  function cleaner() {
@@ -621,12 +626,19 @@ stacked on top of the larger piece.</p>
    rules.forEach( rule => {
      rule.classList.remove("on");
    });
-   document.querySelectorAll("input").forEach( inp => {
+   document.querySelectorAll("table input").forEach( inp => {
      inp.value = "";
+   });
+   document.querySelectorAll("table span").forEach( elt => {
+     elt.innerText = "";
    });
    document.querySelectorAll(".calced").forEach( elt => {
      elt.innerText = "";
    });
+	 //Need a different way to reset the manual checkboxes.
+   //document.querySelectorAll("#ruleList input").forEach( elt => elt.checked = false );
+
+   document.querySelector("tr.bigCity").style.display = (getCitySize() == 2) ? "none" : "table-row";
  }
 
  function randomize() {
@@ -636,6 +648,9 @@ stacked on top of the larger piece.</p>
  }
 
  function setter(ruleIds) {
+   //Count the IDs.
+   document.getElementById("smallCity").checked = (ruleIds.length == 2);
+
    cleaner();
    var target = 0;
    const newRuleIds = ruleIds.sort(function (a, b) {return a - b;});
@@ -644,9 +659,12 @@ stacked on top of the larger piece.</p>
      ruleDiv.classList.add("on");
      document.querySelector("span#sr" + index).innerText = ruleDiv.querySelector("h3").innerText;
      target += parseInt(ruleDiv.getAttribute("data-target"));
+     //Don't reset the manual checkboxes.
+     //document.querySelector("input[data-ruleid='" + number + "']").checked = true;
    });
    document.querySelector("#targetSUM").innerText = target;
 
+   //Set the URL.
    window.history.replaceState( {} , "Selected rules", window.location.origin + window.location.pathname + "?" + newRuleIds.join(","));
  };
 
@@ -670,55 +688,66 @@ stacked on top of the larger piece.</p>
    document.querySelector("#total").innerText = total;
    const target = parseInt(document.querySelector("#targetSUM").innerText) || 0;
    document.querySelector("#total").style.color = (target > total) ? "red" : "green";
- }   
+ }
+
+ function checkCity() {
+   //just start fresh.
+   cleaner();
+   unselectRules();
+ }
 
  function selectRules() {
-	 cleaner();
-	 document.querySelector("#ruleList").style.display = "grid";
-	 document.querySelectorAll("#ruleList input").forEach((elt) => {
-		 elt.checked = false;
-	 });
-	 document.querySelector("#unmanual").style.display = "inline-block";
+   cleaner();
+   document.querySelector("#ruleList").style.display = "grid";
+   document.querySelectorAll("#ruleList input").forEach((elt) => {
+     elt.checked = false;
+   });
+   document.querySelector("#unmanual").style.display = "inline-block";
+   document.querySelector("#manual").style.display = "none";
  }
  
  function unselectRules() {
-	 document.querySelector("#ruleList").style.display = "none";
-	 document.querySelector("#unmanual").style.display = "none";
+   document.querySelector("#ruleList").style.display = "none";
+   document.querySelector("#unmanual").style.display = "none";
+   document.querySelector("#manual").style.display = "inline-block";
  }
  
  function selectRule(event) {
-	 //const ruleId = event.target.getAttribute("data-ruleid");
+   //const ruleId = event.target.getAttribute("data-ruleid");
 
-	 //count rules
-	 const rules = document.querySelectorAll("div#ruleList input:checked");
+   //count rules
+   const rules = document.querySelectorAll("div#ruleList input:checked");
 
-	 if (rules.length > 3) {
-		 alert("Too many rules.");
-		 event.target.checked = false;
-		 return;
-	 }
+   const citySize =  getCitySize();
 
-	 //for simplicity we reset almost every time
-	 const ruleIds = [...rules].map(elt => elt.getAttribute("data-ruleid"));
+   if (rules.length > citySize) {
+     alert("Too many rules.");
+     event.target.checked = false;
+     return;
+   }
 
-	 cleaner();
-	 ruleIds.forEach( (ruleId) => {
-		 document.querySelector("div#rr" + ruleId).classList.add("on");
-	 });
+   //for simplicity we reset almost every time
+   const ruleIds = [...rules].map(elt => elt.getAttribute("data-ruleid"));
 
-	 if (rules.length == 3) {
-		 setter(ruleIds);
-	 }
+   cleaner();
+   ruleIds.forEach( (ruleId) => {
+     document.querySelector("div#rr" + ruleId).classList.add("on");
+   });
+
+   if (rules.length == citySize) {
+     setter(ruleIds);
+   }
  }
+
  
  window.onload = (event) => {
    if (window.location.search) {
-		 try {
+     try {
        const newRuleIds = (window.location.search.split("?")[1]).split(",");
        setter(newRuleIds);
-		 } catch(e) {
+     } catch(e) {
        randomize();
-		 }
+     }
    } else
      randomize();
  };
@@ -727,6 +756,7 @@ stacked on top of the larger piece.</p>
  document.querySelector("#randomize").addEventListener('click', randomize);
  document.querySelector("#manual").addEventListener('click', selectRules);
  document.querySelector("#unmanual").addEventListener('click', unselectRules);
+ document.querySelector("#smallCity").addEventListener('change', checkCity);
  document.querySelector("div#ruleList").addEventListener('change', selectRule);
 </script>
 </body>
