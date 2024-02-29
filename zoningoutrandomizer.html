@@ -209,7 +209,7 @@ d    h5, h6 {
 <p>The game uses variable goals, called <em>scoring rules</em>, which this
  randomizer can choose at random.  It can can also import or select specific rules,  
  and includes a working scoresheet.</p>
-<p>For your convenience, the official rules are reproduced below:</p>
+<p>For your convenience, the <a href="./zoningout.html">official rules</a> are reproduced below:</p>
 
 <details>
   <summary>Rules</summary>
@@ -298,6 +298,16 @@ our game. <img src="images/basic_scoring.svg" width="500"></p>
 </blockquote>
 <p>There is a <a href="#scoring-sheet">scoring sheet</a> at the end of
 this document that you can use for calculating your score.</p>
+
+<h2 id="special-scoring-rules">Special Scoring Rules</h2>
+<p>During your game you will be playing with three <!--of the--> special
+scoring rules listed below. For the solo and co-operative game modes, a
+target score is listed. Your goal is to build a city that scores as much
+or more than the target scores of all three special scoring rules added
+together. <!-- For convenience, the titles of the rules are also listed in
+here with links to the rules themselves. To randomly select scoring
+rules, you could write these titles on slips of paper and draw three
+from a hat.--></p>
 <hr />
 </details>
 
@@ -339,15 +349,7 @@ few points whenever you play.</p>
 <h3 id="small-city">Small City</h3>
 <p>This variant is good for a quicker, more relaxed game. Play with only
 2 trios per color, and with only 2 special scoring rules.</p>
-<h2 id="special-scoring-rules">Special Scoring Rules</h2>
-<p>During your game you will be playing with three of the special
-scoring rules listed below. For the solo and co-operative game modes, a
-target score is listed. Your goal is to build a city that scores as much
-or more than the target scores of all three special scoring rules added
-together. For convenience, the titles of the rules are also listed in
-here with links to the rules themselves. To randomly select scoring
-rules, you could write these titles on slips of paper and draw three
-from a hat.</p>
+
 <hr />
 </details>
 
@@ -550,55 +552,74 @@ stacked on top of the larger piece.</p>
 <table>
 <tbody>
 <tr>
-<td>Residential (red) largest group</td>
+<td colspan="2">Residential (red) largest group</td>
 <td><input class="colorScore" id="color1" type="text"/></td>
 </tr>
 <tr>
-<td>Industrial (yellow) largest group</td>
+<td colspan="2">Industrial (yellow) largest group</td>
 <td><input class="colorScore" id="color2" type="text"/></td>
 </tr>
 <tr>
-<td>Commercial (blue) largest group</td>
+<td colspan="2">Commercial (blue) largest group</td>
 <td><input class="colorScore" id="color3" type="text"/></td>
 </tr>
 <tr>
-<td>Green space (green) largest group</td>
+<td colspan="2">Green space (green) largest group</td>
 <td><input class="colorScore" id="color4" type="text"/></td>
 </tr>
 <tr>
-<td><strong>Colors SUM</strong></td>
+<td colspan="2"><strong>Colors SUM</strong></td>
 <td><b id="colorSubtotal" class="calced"></b></td>
 </tr>
 <tr>
-<td>Black (sum of size &times; neighbors)</td>
-<td><input id="blackScore" type="text"/></td></td>
+<td>Black: neighbors of 1-pip pyramids</td>
+<td><input id="blackScore1" type="text"/></td>
+<td id="blackSubtotal1" class="calced"></td>
 </tr>
 <tr>
-<td><strong>(Colors - Black) Subtotal</strong></td>
+<td>Black: neighbors of 2-pip pyramids</td>
+<td><input id="blackScore2" type="text"/></td>
+<td id="blackSubtotal2" class="calced"></td>
+</tr>
+<tr>
+<td>Black: neighbors of 3-pip pyramids</td>
+<td><input id="blackScore3" type="text"/></td>
+<td id="blackSubtotal3" class="calced"></td>
+</tr>
+<tr>
+<td colspan="2">OR Black: (sum of size &times; neighbors)</td>
+<td><input id="blackScore" type="text"/></td>
+</tr>
+<tr>
+<td colspan="2"><b>Black SUM</b></td>
+<td id="blackSubtotal" class="calced"></td>
+</tr>
+<tr>
+<td colspan="2"><strong>(Colors - Black) Subtotal</strong></td>
 <td><b id="clackSubtotal" class="calced"></b></td>
 </tr>
 <tr>
-	<td>Rule #1: <span id="sr0"></span> </td>
+	<td colspan="2">Rule #1: <span id="sr0"></span> </td>
 	<td><input class="ruleScore" id="rule1" type="text"/></td>
 </tr>
 <tr>
-	<td>Rule #2: <span id="sr1"></span></td>
+	<td colspan="2">Rule #2: <span id="sr1"></span></td>
 	<td><input class="ruleScore" id="rule2" type="text"/></td>
 </tr>
 <tr class="bigCity">
-	<td>Rule #3: <span id="sr2"></span></td>
+	<td colspan="2">Rule #3: <span id="sr2"></span></td>
 	<td><input class="ruleScore" id="rule3" type="text"/></td>
 </tr>
 <tr>
-<td><strong>Scoring Rules SUM</strong></td>
+<td colspan="2"><strong>Scoring Rules SUM</strong></td>
 <td><b id="ruleSubtotal" class="calced"></b></td>
 </tr>
 <tr>
-	<td><em>Scoring Rules Targets SUM</em></td>
-	<td><em id="targetSUM" class="calced"></em></td>
+<td colspan="2"><em>Scoring Rules Targets SUM</em></td>
+<td><em id="targetSUM" class="calced"></em></td>
 </tr>
 <tr>
-<td><strong>Total</strong></td>
+<td colspan="2"><strong>Total</strong></td>
 <td><b id="total" class="calced"></b></td>
 </tr>
 </tbody>
@@ -691,7 +712,20 @@ stacked on top of the larger piece.</p>
    });
    document.querySelector("#colorSubtotal").innerText = colorTotal;
 
-   var blackTotal = parseInt(document.querySelector("#blackScore").value) || 0;
+   var blackTotal, blackeye;
+   if (document.querySelector("#blackScore").value) {
+     //You can fill in your own total, or the individual values.
+     blackTotal = parseInt(document.querySelector("#blackScore").value) || 0;
+   } else {
+     blackTotal = 0;
+     for (var i = 1; i <= 3; i++) {
+       blackeye = (parseInt(document.getElementById("blackScore" + i).value) || 0) * i;
+       document.getElementById("blackSubtotal" + i).innerText = blackeye;
+       blackTotal += blackeye;
+     }
+   }
+
+   document.querySelector("#blackSubtotal").innerText = blackTotal;
    document.querySelector("#clackSubtotal").innerText = (colorTotal - blackTotal);
 
    var ruleTotal = 0;
