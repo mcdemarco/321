@@ -168,26 +168,32 @@ d    h5, h6 {
     .display.math{display: block; text-align: center; margin: 0.5rem auto;}
   </style>
 
-	<style>
-	 div.rule {display:none;}
-	 div.rule.on {display:block;}
-	 td {border: 1px solid #cecece;}
-	 td:nth-child(even), input {text-align: right;}
-	 table input {width: 25px;}
-	 div#ruleList {
-		 display: none; /*grid is intended*/
-		 grid-template-columns: 1fr 1fr 1fr; 
-		 margin: 20px 10px;}
-	 div#ruleList label {
-		 display: inline-block; 
-		 white-space: nowrap; 
-		 margin-right: 25px;}
-	 button#unmanual {display: none;}
+  <style>
+   div.rule {display:none;}
+   div.rule.on {display:block;}
+   td {border: 1px solid #cecece;}
+   td:nth-child(even), input {text-align: right;}
+   table input {width: 25px;}
+   div#ruleList {
+     display: none; /*grid is intended*/
+     grid-template-columns: 1fr 1fr 1fr; 
+     margin: 20px 10px;}
+   div#ruleList label {
+     display: inline-block; 
+     white-space: nowrap; 
+     margin-right: 25px;}
+   button#unmanual {display: none;}
+   tt {white-space: nowrap;}
+   #alert {
+     color: tomato;
+     display: none;
+   }
+
    @media (max-width: 600px) {
-		 div#ruleList {
-			 grid-template-columns: 1fr 1fr;
-		 }
-	 }
+     div#ruleList {
+       grid-template-columns: 1fr 1fr;
+     }
+   }
   </style>
 
   <!--[if lt IE 9]>
@@ -347,7 +353,7 @@ from a hat.</p>
 
 <h2>Selected Scoring Rules</h2>
 
-<button type="button" id="randomize">Randomize</button> <button type="button" id="manual">Select manually</button> <button type="button" id="unmanual">Hide selection list</button> &nbsp; <label><input type="checkbox" id="smallCity">Small City variant</label>
+<button type="button" id="randomize">Randomize</button> <button type="button" id="manual">Select manually</button> <button type="button" id="unmanual">Hide selection list</button> &nbsp; <label><input type="checkbox" id="smallCity">Small City variant</label> &nbsp; <span id="alert">Too many rules!</span>
 
 <div id="ruleList">
  <label><input data-ruleid="1" type="checkbox" id="#15-minute-city">&nbsp;15-Minute City</label> 
@@ -598,11 +604,18 @@ stacked on top of the larger piece.</p>
 </tbody>
 </table>
 
-<script type="text/javascript">
 
- function getCitySize() {
-   return document.getElementById("smallCity").checked ? 2 : 3;
- }
+<div class="ready"><hr />
+
+<p>The URL to share this combination is <tt><a id="url"></a></tt>.</p>
+</div>
+
+
+<script type="text/javascript">
+(function () {
+  "use strict";
+
+  var model = {ids: [], citySize: 3};
 
  function shuffle(array) {
    for (var i = array.length - 1; i > 0; i--) {
@@ -616,12 +629,21 @@ stacked on top of the larger piece.</p>
  function getRandom() {
    const arr = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18];
    shuffle(arr);
-   const citySize = getCitySize();
-   return arr.slice(0, citySize);
+   return arr.slice(0, model.citySize);
  }
 
- function cleaner() {
-   //Clear existing class.
+ function randomize() {
+   //Select new rules.
+   model.ids = getRandom().sort(function (a, b) {return a - b;});
+   //Set up UI.
+   setter();
+ }
+
+ function setter() {
+   const newRuleIds = model.ids;
+   document.getElementById("smallCity").checked = (model.citySize == 2);
+
+   //Clear existing rule paragraphs and scoring
    const rules = document.querySelectorAll("div.rule");
    rules.forEach( rule => {
      rule.classList.remove("on");
@@ -635,37 +657,31 @@ stacked on top of the larger piece.</p>
    document.querySelectorAll(".calced").forEach( elt => {
      elt.innerText = "";
    });
-	 //Need a different way to reset the manual checkboxes.
-   //document.querySelectorAll("#ruleList input").forEach( elt => elt.checked = false );
 
-   document.querySelector("tr.bigCity").style.display = (getCitySize() == 2) ? "none" : "table-row";
- }
+   document.querySelector("tr.bigCity").style.display = (model.citySize == 2) ? "none" : "table-row";
 
- function randomize() {
-   //Select new rules.
-   const newRuleIds = getRandom();
-   setter(newRuleIds);
- }
+   document.querySelectorAll(".ready").forEach( elt => elt.style.display = "none" );
 
- function setter(ruleIds) {
-   //Count the IDs.
-   document.getElementById("smallCity").checked = (ruleIds.length == 2);
-
-   cleaner();
    var target = 0;
-   const newRuleIds = ruleIds.sort(function (a, b) {return a - b;});
    newRuleIds.forEach( (number, index) => {
      var ruleDiv = document.querySelector("div#rr" + number);
      ruleDiv.classList.add("on");
      document.querySelector("span#sr" + index).innerText = ruleDiv.querySelector("h3").innerText;
      target += parseInt(ruleDiv.getAttribute("data-target"));
-     //Don't reset the manual checkboxes.
-     //document.querySelector("input[data-ruleid='" + number + "']").checked = true;
    });
-   document.querySelector("#targetSUM").innerText = target;
 
-   //Set the URL.
-   window.history.replaceState( {} , "Selected rules", window.location.origin + window.location.pathname + "?" + newRuleIds.join(","));
+   //Non-cleaner tasks
+   if (newRuleIds.length) {
+      document.querySelector("#targetSUM").innerText = target;
+
+     //Set the URL.
+     const URL = window.location.origin + window.location.pathname + "?" + newRuleIds.join(",");
+     window.history.replaceState( {} , "Selected rules", URL);
+     document.getElementById("url").setAttribute("href", URL);
+     document.getElementById("url").innerText = URL;
+
+     document.querySelectorAll(".ready").forEach( elt => elt.style.display = "block" );
+   }
  };
 
  function summer() {
@@ -691,60 +707,83 @@ stacked on top of the larger piece.</p>
  }
 
  function checkCity() {
-   //just start fresh.
-   cleaner();
-   unselectRules();
+   model.citySize = document.querySelector("#smallCity").checked ? 2 : 3;
+   
+   if (document.querySelector("#unmanual").style.display == "inline-block") {
+     //We're selecting manually, so recheck current selection sans event 
+     selectRule();
+   } else if (model.ids.length) {
+     //we had a set of rules, so just start fresh to not confuse the user
+     model.ids = [];
+     setter();
+   } else {
+     //Corner case?
+     randomize();
+   }
  }
 
  function selectRules() {
-   cleaner();
+   //Reset at the start.
+   model.ids = [];
+   setter();
+
    document.querySelector("#ruleList").style.display = "grid";
    document.querySelectorAll("#ruleList input").forEach((elt) => {
      elt.checked = false;
    });
+
    document.querySelector("#unmanual").style.display = "inline-block";
    document.querySelector("#manual").style.display = "none";
  }
  
  function unselectRules() {
-   document.querySelector("#ruleList").style.display = "none";
    document.querySelector("#unmanual").style.display = "none";
    document.querySelector("#manual").style.display = "inline-block";
+
+   document.querySelector("#ruleList").style.display = "none";
  }
  
  function selectRule(event) {
    //const ruleId = event.target.getAttribute("data-ruleid");
 
    //count rules
-   const rules = document.querySelectorAll("div#ruleList input:checked");
+   var rules = document.querySelectorAll("div#ruleList input:checked");
 
-   const citySize =  getCitySize();
-
-   if (rules.length > citySize) {
-     alert("Too many rules.");
-     event.target.checked = false;
-     return;
-   }
+   if (rules.length > model.citySize) {
+     document.getElementById("alert").style.display = "inline-block";
+     if (event) {
+       event.target.checked = false;
+       //recount
+       rules = document.querySelectorAll("div#ruleList input:checked");
+     }
+     setTimeout( function() {document.getElementById("alert").style.display = "none";}, 2000);
+   } else {
+     document.getElementById("alert").style.display = "none";
+   }  
 
    //for simplicity we reset almost every time
-   const ruleIds = [...rules].map(elt => elt.getAttribute("data-ruleid"));
+   const ruleIds = [...rules].map(elt => parseInt(elt.getAttribute("data-ruleid")));
 
-   cleaner();
+   //Model is still empty.
+   setter();
+
    ruleIds.forEach( (ruleId) => {
      document.querySelector("div#rr" + ruleId).classList.add("on");
    });
 
-   if (rules.length == citySize) {
-     setter(ruleIds);
+   if (rules.length == model.citySize) {
+     //Commit ids to the model and set up.
+     model.ids = ruleIds.sort(function (a, b) {return a - b;});
+     setter();
    }
  }
-
  
  window.onload = (event) => {
    if (window.location.search) {
      try {
-       const newRuleIds = (window.location.search.split("?")[1]).split(",");
-       setter(newRuleIds);
+       model.ids = (window.location.search.split("?")[1]).split(",").sort(function (a, b) {return a - b;});
+       model.citySize = model.ids.length;
+       setter();
      } catch(e) {
        randomize();
      }
@@ -758,6 +797,8 @@ stacked on top of the larger piece.</p>
  document.querySelector("#unmanual").addEventListener('click', unselectRules);
  document.querySelector("#smallCity").addEventListener('change', checkCity);
  document.querySelector("div#ruleList").addEventListener('change', selectRule);
+
+})();
 </script>
 </body>
 </html>
