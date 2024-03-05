@@ -169,7 +169,10 @@ d    h5, h6 {
   </style>
 
   <style>
-   div.rule {display:none;}
+   div.rule {
+     display:none;
+     border-bottom: 3px double gray;
+   }
    div.rule.on {display:block;}
    td {border: 1px solid #cecece;}
    td:nth-child(even), input {text-align: right;}
@@ -188,6 +191,7 @@ d    h5, h6 {
      color: tomato;
      display: none;
    }
+   tr.biggerCity, tr.biggestCity {display:none;}
 
    @media (max-width: 600px) {
      div#ruleList {
@@ -355,7 +359,7 @@ few points whenever you play.</p>
 
 <h2>Selected Scoring Rules</h2>
 
-<button type="button" id="randomize">Randomize</button> <button type="button" id="manual">Select manually</button> <button type="button" id="unmanual">Hide selection list</button> &nbsp; <label><input type="checkbox" id="smallCity">Small City variant</label> &nbsp; <span id="alert">Too many rules!</span>
+<button type="button" id="randomize">Randomize</button> <button type="button" id="manual">Select manually</button> <button type="button" id="unmanual">Hide selection list</button> &nbsp; <div style="display:inline-block;vertical-align:top;"><label><input type="radio" name="variant" id="regularCity">Standard (3) rules</label><br/><label><input type="radio" name="variant" id="smallCity">Small City variant</label></div> &nbsp; <span id="alert">Too many rules!</span>
 
 <div id="ruleList">
  <label><input data-ruleid="1" type="checkbox" id="#15-minute-city">&nbsp;15-Minute City</label> 
@@ -552,75 +556,83 @@ stacked on top of the larger piece.</p>
 <table>
 <tbody>
 <tr>
-<td colspan="2">Residential (red) largest group</td>
-<td><input autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" class="colorScore" id="color1" type="text"/></td>
+	<td colspan="2">Residential (red) largest group</td>
+	<td><input autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" class="colorScore" id="color1" type="text"/></td>
 </tr>
 <tr>
-<td colspan="2">Industrial (yellow) largest group</td>
-<td><input autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" class="colorScore" id="color2" type="text"/></td>
+	<td colspan="2">Industrial (yellow) largest group</td>
+	<td><input autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" class="colorScore" id="color2" type="text"/></td>
 </tr>
 <tr>
-<td colspan="2">Commercial (blue) largest group</td>
-<td><input autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" class="colorScore" id="color3" type="text"/></td>
+	<td colspan="2">Commercial (blue) largest group</td>
+	<td><input autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" class="colorScore" id="color3" type="text"/></td>
 </tr>
 <tr>
-<td colspan="2">Green space (green) largest group</td>
-<td><input autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" class="colorScore" id="color4" type="text"/></td>
+	<td colspan="2">Green space (green) largest group</td>
+	<td><input autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" class="colorScore" id="color4" type="text"/></td>
 </tr>
 <tr>
-<td colspan="2"><strong>Colors SUM</strong></td>
-<td><b id="colorSubtotal" class="calced"></b></td>
+	<td colspan="2"><strong>Colors SUM</strong></td>
+	<td><b id="colorSubtotal" class="calced"></b></td>
 </tr>
 <tr>
-<td>Black: neighbors of 1-pip pyramids</td>
-<td><input autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" id="blackScore1" type="text"/></td>
-<td id="blackSubtotal1" class="calced"></td>
+	<td>Black: neighbors of 1-pip pyramids</td>
+	<td><input autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" id="blackScore1" type="text"/></td>
+	<td id="blackSubtotal1" class="calced"></td>
 </tr>
 <tr>
-<td>Black: neighbors of 2-pip pyramids</td>
-<td><input autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" id="blackScore2" type="text"/></td>
-<td id="blackSubtotal2" class="calced"></td>
+	<td>Black: neighbors of 2-pip pyramids</td>
+	<td><input autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" id="blackScore2" type="text"/></td>
+	<td id="blackSubtotal2" class="calced"></td>
 </tr>
 <tr>
-<td>Black: neighbors of 3-pip pyramids</td>
-<td><input autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" id="blackScore3" type="text"/></td>
-<td id="blackSubtotal3" class="calced"></td>
+	<td>Black: neighbors of 3-pip pyramids</td>
+	<td><input autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" id="blackScore3" type="text"/></td>
+	<td id="blackSubtotal3" class="calced"></td>
 </tr>
 <tr>
-<td colspan="2">OR Black: (sum of size &times; neighbors)</td>
-<td><input autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" id="blackScore" type="text"/></td>
+	<td colspan="2">OR Black: (sum of size &times; neighbors)</td>
+	<td><input autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" id="blackScore" type="text"/></td>
 </tr>
 <tr>
-<td colspan="2"><b>Black SUM</b></td>
-<td id="blackSubtotal" class="calced"></td>
+	<td colspan="2"><b>Black SUM</b></td>
+	<td id="blackSubtotal" class="calced"></td>
 </tr>
 <tr>
-<td colspan="2"><strong>(Colors - Black) Subtotal</strong></td>
-<td><b autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" id="clackSubtotal" class="calced"></b></td>
+	<td colspan="2"><strong>(Colors - Black) Subtotal</strong></td>
+	<td><b autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" id="clackSubtotal" class="calced"></b></td>
+</tr>
+<tr data-rule="1" class="ruleRow">
+	<td colspan="2">Rule #1: <span id="sr0"></span> </td>
+	<td><input autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" class="ruleScore" id="rule1" type="text"/></td>
+</tr>
+<tr data-rule="2" class="ruleRow">
+	<td colspan="2">Rule #2: <span id="sr1"></span></td>
+	<td><input autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" class="ruleScore" id="rule2" type="text"/></td>
+</tr>
+<tr data-rule="3" class="ruleRow bigCity">
+	<td colspan="2">Rule #3: <span id="sr2"></span></td>
+	<td><input autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" class="ruleScore" id="rule3" type="text"/></td>
+</tr>
+<tr data-rule="4" class="ruleRow biggerCity">
+	<td colspan="2">Rule #4: <span id="sr3"></span></td>
+	<td><input autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" class="ruleScore" id="rule3" type="text"/></td>
+</tr>
+<tr data-rule="5" class="ruleRow biggestCity">
+	<td colspan="2">Rule #5: <span id="sr4"></span></td>
+	<td><input autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" class="ruleScore" id="rule3" type="text"/></td>
 </tr>
 <tr>
-<td colspan="2">Rule #1: <span id="sr0"></span> </td>
-<td><input autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" class="ruleScore" id="rule1" type="text"/></td>
+	<td colspan="2"><strong>Scoring Rules SUM</strong></td>
+	<td><b id="ruleSubtotal" class="calced"></b></td>
 </tr>
 <tr>
-<td colspan="2">Rule #2: <span id="sr1"></span></td>
-<td><input autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" class="ruleScore" id="rule2" type="text"/></td>
-</tr>
-<tr class="bigCity">
-<td colspan="2">Rule #3: <span id="sr2"></span></td>
-<td><input autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" class="ruleScore" id="rule3" type="text"/></td>
+	<td colspan="2"><em>Scoring Rules Targets SUM</em></td>
+	<td><em id="targetSUM" class="calced"></em></td>
 </tr>
 <tr>
-<td colspan="2"><strong>Scoring Rules SUM</strong></td>
-<td><b id="ruleSubtotal" class="calced"></b></td>
-</tr>
-<tr>
-<td colspan="2"><em>Scoring Rules Targets SUM</em></td>
-<td><em id="targetSUM" class="calced"></em></td>
-</tr>
-<tr>
-<td colspan="2"><strong>Total</strong></td>
-<td><b id="total" class="calced"></b></td>
+	<td colspan="2"><strong>Total</strong></td>
+	<td><b id="total" class="calced"></b></td>
 </tr>
 </tbody>
 </table>
@@ -636,6 +648,7 @@ stacked on top of the larger piece.</p>
 (function () {
   "use strict";
 
+  const maxCitySize = 5;
   var model = {ids: [], citySize: 3};
 
  function shuffle(array) {
@@ -656,12 +669,15 @@ stacked on top of the larger piece.</p>
  function randomize() {
    //Select new rules.
    model.ids = getRandom().sort(function (a, b) {return a - b;});
+   //Clean up manual selection.
+   unselectRules();
    //Set up UI.
    setter();
  }
 
  function setter() {
    const newRuleIds = model.ids;
+   document.getElementById("regularCity").checked = (model.citySize == 3);
    document.getElementById("smallCity").checked = (model.citySize == 2);
 
    //Clear existing rule paragraphs and scoring
@@ -679,7 +695,9 @@ stacked on top of the larger piece.</p>
      elt.innerText = "";
    });
 
-   document.querySelector("tr.bigCity").style.display = (model.citySize == 2) ? "none" : "table-row";
+   document.querySelectorAll("tr.ruleRow").forEach( elt => {
+     elt.style.display = (parseInt(elt.getAttribute("data-rule")) > model.citySize) ? "none" : "table-row";
+   });
 
    document.querySelectorAll(".ready").forEach( elt => elt.style.display = "none" );
 
@@ -741,7 +759,10 @@ stacked on top of the larger piece.</p>
  }
 
  function checkCity() {
-   model.citySize = document.querySelector("#smallCity").checked ? 2 : 3;
+   if (document.querySelector("#smallCity").checked)
+     model.citySize = 2;
+   else if (document.querySelector("#regularCity").checked)
+     model.citySize = 3;
    
    if (document.querySelector("#unmanual").style.display == "inline-block") {
      //We're selecting manually, so recheck current selection sans event 
@@ -774,6 +795,9 @@ stacked on top of the larger piece.</p>
    document.querySelector("#unmanual").style.display = "none";
    document.querySelector("#manual").style.display = "inline-block";
 
+   document.querySelectorAll("#ruleList input").forEach((elt) => {
+     elt.checked = false;
+   });
    document.querySelector("#ruleList").style.display = "none";
  }
  
@@ -783,7 +807,7 @@ stacked on top of the larger piece.</p>
    //count rules
    var rules = document.querySelectorAll("div#ruleList input:checked");
 
-   if (rules.length > model.citySize) {
+   if (rules.length > maxCitySize) {
      document.getElementById("alert").style.display = "inline-block";
      if (event) {
        event.target.checked = false;
@@ -798,18 +822,20 @@ stacked on top of the larger piece.</p>
    //for simplicity we reset almost every time
    const ruleIds = [...rules].map(elt => parseInt(elt.getAttribute("data-ruleid")));
 
-   //Model is still empty.
-   setter();
+   //Model is still empty so this resets.  
+   //Possibly not neccesary with rule count restriction turned off.
+   //setter();
 
    ruleIds.forEach( (ruleId) => {
      document.querySelector("div#rr" + ruleId).classList.add("on");
    });
 
-   if (rules.length == model.citySize) {
+//   if (rules.length == model.citySize) { //no longer restricting city sizes.
      //Commit ids to the model and set up.
      model.ids = ruleIds.sort(function (a, b) {return a - b;});
+     model.citySize = model.ids.length;
      setter();
-   }
+//   }
  }
  
  window.onload = (event) => {
@@ -829,6 +855,7 @@ stacked on top of the larger piece.</p>
  document.querySelector("#randomize").addEventListener('click', randomize);
  document.querySelector("#manual").addEventListener('click', selectRules);
  document.querySelector("#unmanual").addEventListener('click', unselectRules);
+ document.querySelector("#regularCity").addEventListener('change', checkCity);
  document.querySelector("#smallCity").addEventListener('change', checkCity);
  document.querySelector("div#ruleList").addEventListener('change', selectRule);
 
