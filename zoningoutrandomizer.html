@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>Zoning Out Randomizer</title>
   <style>
+   /* styles inserted by pandoc */
     html {
       color: #1a1a1a;
       background-color: #fdfdfd;
@@ -67,7 +68,7 @@
     h1, h2, h3, h4, h5, h6 {
       margin-top: 1.4em;
     }
-d    h5, h6 {
+    h5, h6 {
       font-size: 1em;
       font-style: italic;
     }
@@ -169,35 +170,91 @@ d    h5, h6 {
   </style>
 
   <style>
+   /* styles specific to the randomizer */
    div.rule {
-     display:none;
-     border-bottom: 3px double gray;
+       display:none;
+       border-bottom: 3px double gray;
    }
    div.rule.on {display:block;}
    td {border: 1px solid #cecece;}
    td:nth-child(even), input {text-align: right;}
    table input {width: 25px;}
    div#ruleList {
-     display: none; /*grid is intended*/
-     grid-template-columns: 1fr 1fr 1fr; 
-     margin: 20px 10px;}
+       display: none; /*grid is intended*/
+       grid-template-columns: 1fr 1fr 1fr; 
+       margin: 20px 10px;}
    div#ruleList label {
-     display: inline-block; 
-     white-space: nowrap; 
-     margin-right: 25px;}
+       display: inline-block; 
+       white-space: nowrap; 
+       margin-right: 25px;}
    button#unmanual {display: none;}
    tt {white-space: nowrap;}
    #alert {
-     color: tomato;
-     display: none;
+       color: tomato;
+       display: none;
    }
    tr.biggerCity, tr.biggestCity {display:none;}
 
    @media (max-width: 600px) {
-     div#ruleList {
-       grid-template-columns: 1fr 1fr;
-     }
+       div#ruleList {
+	   grid-template-columns: 1fr 1fr;
+       }
    }
+
+   /* styles for drawing pyramids */
+
+   .info {
+       font-style: italic;
+       color: #444444;
+   }
+   span.info {font-size: smaller;}
+
+   @font-face {
+       font-family: 'PyramidLove';
+       src: url('Pyramid-Love-3.1.woff');
+   }
+
+   div.draw-bags, 
+   div.draw-bags button {
+       font-family: 'PyramidLove' !important;
+       font-size: 36px;
+   }
+   div.draw-bags button {
+       display: inline-block;
+       background-color: #7A5F8D; /*#797979;*/
+       color: #ffffff;
+       text-align: center;
+       border: 4px double #cccccc;
+       border-radius: 15px;
+   }
+   div.draw-bags button:active {
+       background-color: #CC6FCC;
+   }
+   div.draw-bags button:hover {
+       background-color: #A86AA7;
+   }
+   div.draw-bags button.off, 
+   div.draw-bags button.off:hover {
+       background-color: #D6D6D6!important;
+   }
+   div.draw-bags input {width: 24px;}
+
+   div.draw-bags span {
+       -webkit-text-stroke: 1px;
+       -webkit-text-stroke-color: #333;
+   }
+   div.draw-bags span.red {-webkit-text-fill-color: #EF8785;}
+   div.draw-bags span.yellow {-webkit-text-fill-color: #FCEFB2;}
+   div.draw-bags span.blue {-webkit-text-fill-color: #98E2FC;}
+   div.draw-bags span.green {-webkit-text-fill-color: #CDE8B4;}
+   div.draw-bags span.black {-webkit-text-fill-color: #000000;}
+
+   div.draw-button-area {display: inline-block;}
+
+   div.draw-button-area span {
+       padding-left: 15px;
+   }
+
   </style>
 
   <!--[if lt IE 9]>
@@ -643,13 +700,38 @@ stacked on top of the larger piece.</p>
 <p>The URL to share this combination is <tt><a id="url"></a></tt>.</p>
 </div>
 
+<h2 id="draw-bags">Draw Bags</h2>
+
+<p><label>Number of trios:&nbsp;<input type="number" value="3" min="1" max="6" id="trios"></label> <span class="info">(You don't normally need to change this value.)</span></p>
+
+<p class="info">Click a button below to draw a random pyramid of the desired size.</p>
+
+<div class="draw-bags">
+
+<div id="draw-buttons" class="draw-button-area">
+     <button type="button" class="draw off" data-pips="1" id="draw1" title="Draw a Small">:SPN</button>
+     <button type="button" class="draw off" data-pips="2" id="draw2" title="Draw a Medium">:MPN</button>
+     <button type="button" class="draw off" data-pips="3" id="draw3" title="Draw a Large">:LPN</button>
+</div>
+
+<div id="draw-current" class="draw-button-area"><span></span></div>
+
+<p id="draw-record"></p>
+
+</div>
+
 
 <script type="text/javascript">
 (function () {
   "use strict";
 
   const maxCitySize = 5;
-  var model = {ids: [], citySize: 3};
+  var model = {ids: [], 
+      	       citySize: 3, 
+	       trios: 3, 
+	       pyramids: [[],[],[]]
+  };
+  const pyramidLigatures = ["::SPN","::MPN","::LPN"];
 
  function shuffle(array) {
    for (var i = array.length - 1; i > 0; i--) {
@@ -675,10 +757,38 @@ stacked on top of the larger piece.</p>
    setter();
  }
 
+ function randomizeTrios() {
+   //Randomizes the pyramid draw bags.
+
+   //Need to reset the model.
+   model.pyramids = [[],[],[]];
+
+   //Make the arrays.
+   const trio = ["red","yellow","blue","green","black"];
+
+   for (var p=0; p<3; p++) {
+     for (var t=1; t<=model.trios; t++) {
+       model.pyramids[p] = model.pyramids[p].concat(trio);
+     }
+     //After concatting, shuffle.
+     shuffle(model.pyramids[p]);
+   }
+
+   //Set up UI.
+   document.querySelectorAll("button.draw").forEach(elt => {
+     elt.classList.remove("off");
+   });
+   pyramidMover();  //There can be pyramids left in the current box.
+   document.querySelector("#draw-record").innerHTML = "";
+ }
+
  function setter() {
+    //Sets rules from the randomizer, search param, or manual selection.
    const newRuleIds = model.ids;
    document.getElementById("regularCity").checked = (model.citySize == 3);
    document.getElementById("smallCity").checked = (model.citySize == 2);
+
+   document.getElementById("trios").value = model.trios;
 
    //Clear existing rule paragraphs and scoring
    const rules = document.querySelectorAll("div.rule");
@@ -721,6 +831,8 @@ stacked on top of the larger piece.</p>
 
      document.querySelectorAll(".ready").forEach( elt => elt.style.display = "block" );
    }
+
+   randomizeTrios();
  };
 
  function summer() {
@@ -759,11 +871,15 @@ stacked on top of the larger piece.</p>
  }
 
  function checkCity() {
-   if (document.querySelector("#smallCity").checked)
+   if (document.querySelector("#smallCity").checked) {
      model.citySize = 2;
-   else if (document.querySelector("#regularCity").checked)
+     model.trios = 2;
+   } else if (document.querySelector("#regularCity").checked) {
      model.citySize = 3;
-   
+     model.trios = 3;
+   }
+   //In any other case, trios can vary independently from citySize.
+
    if (document.querySelector("#unmanual").style.display == "inline-block") {
      //We're selecting manually, so recheck current selection sans event 
      selectRule();
@@ -830,19 +946,68 @@ stacked on top of the larger piece.</p>
      document.querySelector("div#rr" + ruleId).classList.add("on");
    });
 
-//   if (rules.length == model.citySize) { //no longer restricting city sizes.
-     //Commit ids to the model and set up.
-     model.ids = ruleIds.sort(function (a, b) {return a - b;});
-     model.citySize = model.ids.length;
-     setter();
-//   }
+    //no longer restricting city sizes.
+    //Commit ids to the model and set up.
+    model.ids = ruleIds.sort(function (a, b) {return a - b;});
+    model.citySize = model.ids.length;
+    setter();
+ }
+
+ function setTrios() {
+   //Override model with set value, re-randomize (on change).
+   model.trios = parseInt(document.querySelector("#trios").value) || model.citySize;
+   randomizeTrios();
+ }
+
+ function picker(event) {
+   if (event.target.classList.contains("off"))
+     return;
+
+   //Which button was pushed?
+   const pips = parseInt(event.target.getAttribute("data-pips"));
+   const pipIndex = pips - 1;
+  
+   //Also check that array, because if you click too fast you can get here.
+   if (model.pyramids[pipIndex].length < 1)
+     return;
+
+   //Pop the appropriate array.
+   const color = model.pyramids[pipIndex].pop();
+
+   //Move the old one pyramid out of the way.
+   pyramidMover();
+   
+   //Draw the drawn pyramid.
+   const newPyramidSpan = document.createElement("span");
+   newPyramidSpan.classList.add(color);
+   const newPSContent = document.createTextNode(pyramidLigatures[pipIndex]);
+   newPyramidSpan.appendChild(newPSContent);
+
+   document.querySelector("#draw-current").appendChild(newPyramidSpan);
+
+   //Check whether we need to disable the button and disable it.
+   if (model.pyramids[pipIndex].length)
+     return;
+
+   //Disabling.
+   document.querySelector("button#draw" + pips).classList.add("off");
+
+   //If this is the last pyramid, copy it to the list.
+   if (model.pyramids[0].length == 0 && model.pyramids[1].length == 0 && model.pyramids[2].length == 0)
+     setTimeout(pyramidMover, 3000);
  }
  
+ function pyramidMover() {
+   if (document.querySelector("#draw-current span"))
+     document.querySelector("#draw-record").appendChild(document.querySelector("#draw-current span"));
+ }
+
  window.onload = (event) => {
    if (window.location.search) {
      try {
        model.ids = (window.location.search.split("?")[1]).split(",").sort(function (a, b) {return a - b;});
        model.citySize = model.ids.length;
+       model.trios = model.ids.length == 2 ? 2 : 3;
        setter();
      } catch(e) {
        randomize();
@@ -858,6 +1023,8 @@ stacked on top of the larger piece.</p>
  document.querySelector("#regularCity").addEventListener('change', checkCity);
  document.querySelector("#smallCity").addEventListener('change', checkCity);
  document.querySelector("div#ruleList").addEventListener('change', selectRule);
+ document.querySelector("#trios").addEventListener('change', setTrios);
+ document.querySelector("#draw-buttons").addEventListener('click', picker);
 
 })();
 </script>
