@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Pyramid Randomizer</title>
+  <style>
+   /* styles inserted by pandoc, trimmed */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+  </style>
+
+  <style>
+   /* styles specific to the randomizer */
+	 html {background-image: url(images/what-the-hex.png);}
+	 
+   div.rule {
+     display:none;
+     border-bottom: 3px double gray;
+   }
+   div.rule.on {display:block;}
+   td {border: 1px solid #cecece;}
+   td:nth-child(even), input {text-align: right;}
+   table input {width: 25px;}
+   div#ruleList {
+     display: none; /*grid is intended*/
+     grid-template-columns: 1fr 1fr 1fr; 
+     margin: 20px 10px;}
+   div#ruleList label {
+     display: inline-block; 
+     white-space: nowrap; 
+     margin-right: 25px;}
+   button#unmanual {display: none;}
+   tt {white-space: nowrap;}
+   #alert {
+     color: tomato;
+     display: none;
+   }
+   tr.biggerCity, tr.biggestCity {display:none;}
+
+   @media (max-width: 600px) {
+     div#ruleList {
+	     grid-template-columns: 1fr 1fr;
+     }
+   }
+
+   /* styles for drawing pyramids */
+
+   .info {
+     font-style: italic;
+     color: #444444;
+   }
+   span.info {font-size: smaller;}
+
+   @font-face {
+     font-family: 'PyramidLove';
+     src: url('Pyramid-Love-3.1.woff');
+   }
+
+	 header {
+		 font-size: 24px;
+		 text-align: left;
+		 white-space: nowrap;
+	 }
+
+	 header,
+   div.draw-bags, 
+   div.draw-bags button {
+     font-family: 'PyramidLove' !important;
+   }
+   div.draw-bags button {
+     display: inline-block;
+     background-color: #7A5F8D;
+     color: #ffffff;
+     text-align: center;
+     border: 4px double #cccccc;
+     border-radius: 15px;
+		 min-width: 55px;
+		 min-height: 55px;
+     font-size: 36px;
+   }
+   div.draw-bags button:active {
+     background-color: #CC6FCC;
+   }
+   div.draw-bags button:hover {
+     background-color: #A86AA7;
+   }
+   div.draw-bags button.off, 
+   div.draw-bags button.off:hover {
+     background-color: #D6D6D6!important;
+   }
+   div.draw-bags input {width: 24px;}
+
+   div.draw-bags {font-size: 60px;}
+
+   span {
+     -webkit-text-stroke: 1px;
+     -webkit-text-stroke-color: #333;
+		 -webkit-hyphens: none;
+		 hyphens: none;
+		 word-break: unset;
+		 overflow-wrap: normal;
+   }
+
+	 #draw-record {
+		 overflow-wrap: always;
+		 line-height: 1.3;
+	 }
+
+	 span.Red {-webkit-text-fill-color: #C02F25;}
+   span.Orange {-webkit-text-fill-color: #EC9335;}
+   span.Yellow {-webkit-text-fill-color: #F1E962;}
+   span.Green {-webkit-text-fill-color: #68AC53;}
+   span.Cyan {-webkit-text-fill-color: #72BDCC;}
+   span.Blue {-webkit-text-fill-color: #3C62C2;}
+   span.Purple {-webkit-text-fill-color: #971FB3;}
+   span.Pink {-webkit-text-fill-color: #DB5EB8;}
+   span.Clear {-webkit-text-fill-color: rgba(255,255,255,0);
+     -webkit-text-stroke-color: #aaa;
+	 }
+	 span.Black {-webkit-text-fill-color: black;}
+	 span.White {-webkit-text-fill-color: white;}
+	 span.Silver {-webkit-text-fill-color: #7F7F80;}
+   span.MartianRed {-webkit-text-fill-color: #782320;}
+   span.KickstarterGreen {-webkit-text-fill-color: #7CF08D;}
+	 span.Other {-webkit-text-fill-color: #b5a642;}
+
+   label {
+		 display: inline-block;
+		 white-space: nowrap;
+		 min-width: 5em;
+		 padding: 0px 2px;
+	 }
+   label.MartianRed {
+		 padding-right: 1em;
+	 }
+
+   label.Red {color: #C02F25;}
+   label.Orange {color: #EC9335;}
+   label.Yellow {color: #F1E962;}
+   label.Green {color: #68AC53;}
+   label.Cyan {color: #72BDCC;}
+   label.Blue {color: #3C62C2;}
+   label.Purple {color: #971FB3;}
+   label.Pink {color: #DB5EB8;}
+   label.Clear {color: rgba(255,255,255,0.9);}
+	 label.Black {color: black;}
+	 label.White {color: white;}
+	 label.Silver {color: #7F7F80;}
+   label.MartianRed {color: #782320;}
+   label.KickstarterGreen {color: #7CF08D;}
+	 label.Other {color: #b5a642;}
+
+   label.Yellow,
+   label.Clear,
+   label.White,
+	 label.KickstarterGreen {
+		 background-color: #777;
+		 border-radius: 5px;
+	 }
+   div.draw-button-area {display: inline-block;}
+
+   div.draw-button-area span {
+     padding-left: 15px;
+   }
+
+   div.colors {
+		 display: grid;
+		 grid-template-columns: 3.5em 50%;
+	 }
+	 div#colorInputs {
+		 background-color: white;
+		 padding: 5px 1px 3px 5px;
+		 border-radius: 5px;
+		 border: 1px solid #eee;
+	 }
+
+	 spanTitle {
+		 font-size: 14px;
+	 }
+
+	 footer {
+		 color: #999;
+		 font-size: smaller;
+		 text-align: right;
+	 }
+  </style>
+</head>
+<body>
+	<header>
+		<span class="Red">::LPN</span>
+		<span class="Yellow">::MPNE</span>
+		<span class="Green">::SPE</span>
+		<span class="Blue">::MPSE</span>
+		<span class="Black">::SPS</span>
+		<span class="White">::MPSW</span>
+		<span class="Purple">::LPW</span>
+		<span class="Clear">::SPNW</span>
+		<span class="Orange">::MPN</span>
+		<span class="Silver">::SPNE</span>
+		<span class="MartianRed">::MPE</span>
+		<span class="KickstarterGreen">::LPSE</span>
+		<span class="Other">::MPS</span>
+		<span class="Pink">::SPSW</span>
+		<span class="Cyan">::MPW</span>
+		<span class="Clear">::LPNW</span>
+		<span class="Yellow">::SPN</span>
+	</header>
+
+	<h1 id="pyramid-randomizer">Pyramid Randomizer</h1>
+
+	<p>Many pyramid games involve random setup; here's a randomizer to make it more random.  
+		You have a choice of colors, trio counts, and whether to dispense the pyramids one at a time or all at once.
+		If you need a pyramid randomizer for Zoning Out in particular, 
+		it's included with my <a href="zoningoutrandomizer.html">rule randomizer</a>.
+		There's also a pyramid randomizer <a href="https://dazeysan.github.io/Solomids/SolomidsRandomSetup.html">for Solomids</a>.
+</p>
+
+<h2 id="setup">Setup</h2>
+
+<div class="colors">Colors:
+	<div id="colorInputs">
+		<label class="Red"><input type="checkbox" id="Red"/>Red</label>
+		<label class="Orange"><input type="checkbox" id="Orange"/>Orange</label>
+		<label class="Yellow"><input type="checkbox" id="Yellow"/>Yellow</label>
+		<br/>
+		<label class="Green"><input type="checkbox" id="Green"/>Green</label>
+		<label class="Cyan"><input type="checkbox" id="Cyan"/>Cyan</label>
+		<label class="Blue"><input type="checkbox" id="Blue"/>Blue</label>
+		<br/>
+		<label class="Purple"><input type="checkbox" id="Purple"/>Purple</label>
+		<label class="Pink"><input type="checkbox" id="Pink"/>Pink</label>
+		<label class="Clear"><input type="checkbox" id="Clear"/>Clear</label>
+		<br/>
+		<label class="Black"><input type="checkbox" id="Black"/>Black</label>
+		<label class="White"><input type="checkbox" id="White"/>White</label>
+		<label class="Silver"><input type="checkbox" id="Silver"/>Silver</label>
+		<br/>
+		<label class="MartianRed"><input type="checkbox" id="MartianRed"/>Martian Red</label>
+		<label class="KickstarterGreen"><input type="checkbox" id="KickstarterGreen"/>Kickstarter Green</label>
+		<br/>
+		<label class="Other"><input type="checkbox" id="Other"/>Other</label>
+	</div>
+</div>
+
+<p><label>Number of trios per color:&nbsp;<input type="number" value="3" min="1" max="15" id="trios"></label></p>
+
+
+<h2 id="draw-bag">Draw Bag</h2>
+
+<p class="info">Click the single pyramid button below to draw a random pyramid.<br/>
+Click the multiple pyramid button to show them all.</p>
+
+<div class="draw-bags">
+	<div id="draw-buttons" class="draw-button-area">
+		<button type="button" class="draw off" id="draw1" title="Draw a Pyramid">&#8239;:Mini&#8239;</button>
+		<button type="button" class="draw off" id="drawAll" title="Draw all Pyramids">:MiniTrio</button>
+		<button type="button" id="randomize" title="Re-randomize">:Recycle</button>
+	</div>
+
+	<div id="draw-current" class="draw-button-area"><span></span></div><spanTitle></spanTitle>
+</div>
+
+
+<h2 id="draw-record-header">Drawn Pyramids</h2>
+
+<div class="draw-bags">
+
+	<p id="draw-record"></p>
+
+</div>
+
+<footer>
+	This randomizer is by M.C.DeMarco.  Check out my other gaming tools <a href="//mcdemarco.net/games/">at my website</a>.
+	<br/>
+	The background image, <a href="https://www.toptal.com/designers/subtlepatterns/what-the-hex/">What the Hex?</a> by Angel Micevski, is here to make clear pyramids clearer.
+</footer>
+
+
+
+<script type="text/javascript">
+ (function () {
+   "use strict";
+
+   var model = {
+	   trios: 3,
+		 colors: [],
+	   pyramids: []
+   };
+
+   const pyramidLigatures = ["::SPN","::MPN","::LPN"];
+   const pyramidColors = ["Red", "Orange", "Yellow", "Green", "Cyan", "Blue", "Purple", "Pink", "Clear", "Black", "White", "Silver", "MartianRed", "KickstarterGreen", "Other"];
+
+//Randomizing.
+
+	 function cartesianProduct(a, b) {
+		 return a.reduce((p, x) => [...p, ...b.map(y => [x, y])], []);
+	 }
+
+	 function shuffle(array) {
+		 for (var i = array.length - 1; i > 0; i--) {
+			 var j = Math.floor(Math.random() * (i + 1));
+			 var temp = array[i];
+			 array[i] = array[j];
+			 array[j] = temp;
+		 }
+	 }
+
+	 function randomizeTrios() {
+		 //Randomizes the pyramid draw bag.
+
+		 //Need to reset the model.
+		 model.pyramids = [];
+
+		 const product = cartesianProduct(model.colors, pyramidLigatures);
+
+		 //Make the array.
+		 for (var t=1; t<=model.trios; t++) {
+			 model.pyramids = model.pyramids.concat(product);
+		 }
+
+		 //After concatting, shuffle.
+		 shuffle(model.pyramids);
+		 
+		 //Set up UI.
+
+		 //There can be pyramids left in the current box, so clean it.
+		 movePyramid();
+		 document.querySelector("#draw-record").innerHTML = "";
+
+		 //This can be invoked with no colors, so shut off the buttons in that case.
+		 document.querySelectorAll("button.draw").forEach(elt => {
+			 if (model.pyramids.length == 0)
+				 elt.classList.add("off");
+			 else
+				 elt.classList.remove("off");
+		 });
+	 }
+
+
+	 //Choosing.
+
+	 function setColor(event) {
+		 //Changing colors starts a rerandomize.
+		 const color = event.target.id;
+
+		 if (document.querySelector("input#" + color).checked)
+			 model.colors.push(color);
+		 else {
+ 			 model.colors = model.colors.filter(function(item) {
+				 return item !== color;
+			 });
+		 }
+		 randomizeTrios();
+	 }
+	 
+	 function setTrios() {
+		 //Override model with set value, re-randomize (on change).
+		 model.trios = parseInt(document.querySelector("#trios").value) || 3;
+		 randomizeTrios();
+	 }
+
+
+//Drawing.
+
+	 function pickOne(event) {
+		 if (event.target.classList.contains("off"))
+			 return;
+		 
+		 //Which button was pushed?
+		 
+		 //Also check the array, because if you click too fast you can get here.
+		 if (model.pyramids.length < 1)
+			 return;
+		 
+		 //Pop the array.
+		 const pyramid = model.pyramids.pop();
+		 const color = pyramid[0];
+		 const text = pyramid[1];
+
+		 //Move the old one pyramid out of the way.
+		 movePyramid();
+		 
+		 //Draw the drawn pyramid.
+		 const newPyramidSpan = drawPyramid(pyramid);
+
+		 const title = newPyramidSpan.getAttribute("title");
+		 document.querySelector("spanTitle").innerHTML = title;
+
+		 document.querySelector("#draw-current").appendChild(newPyramidSpan);
+		 
+		 //If this is the last pyramid, copy it to the list and disable the buttons.
+		 if (model.pyramids.length == 0) {
+			 setTimeout(movePyramid, 3000);
+			 //Disabling buttons.
+			 document.querySelectorAll("button.draw").forEach( elt =>
+				 elt.classList.add("off")
+			 );
+		 }
+	 }
+
+	 function pickAll() {
+		 //Move the old one pyramid out of the way.
+		 movePyramid();
+
+		 while (model.pyramids.length) {
+			 let pyramid = model.pyramids.pop();
+			 const newPyramidSpan = drawPyramid(pyramid);
+
+			 document.querySelector("#draw-record").appendChild(newPyramidSpan);
+			 document.querySelector("#draw-record").innerHTML += "&ZeroWidthSpace;";
+		 }
+
+		 //At the last pyramid, disable the buttons.
+		 document.querySelectorAll("button.draw").forEach( elt => 
+			 elt.classList.add("off")
+		 );
+	 }
+
+	 function drawPyramid(pyramid) {
+		 let color = pyramid[0];
+		 let text = pyramid[1];
+		 
+		 //Draw the drawn pyramid.
+		 const newPyramidSpan = document.createElement("span");
+		 newPyramidSpan.classList.add(color);
+
+		 var titleText;
+		 switch (text) {
+			 case "::SPN":
+				 titleText = "Small ";
+				 break;
+			 case "::MPN":
+				 titleText = "Medium ";
+				 break;
+			 case "::LPN":
+				 titleText = "Large ";
+		 }
+		 titleText += color + " Pyramid";
+		 newPyramidSpan.setAttribute("title",titleText);
+
+		 const newPSContent = document.createTextNode(text);
+		 newPyramidSpan.appendChild(newPSContent);
+		 
+		 return newPyramidSpan;
+	 }
+	 
+	 function movePyramid() {
+		 if (document.querySelector("#draw-current span")) {
+			 document.querySelector("#draw-record").appendChild(document.querySelector("#draw-current span"));
+			 document.querySelector("#draw-record").innerHTML += "&ZeroWidthSpace;";
+		 }
+		 document.querySelector("spanTitle").innerHTML = "";
+	 }
+
+
+//Loading.
+
+	 window.onload = (event) => {
+		 //It would be nice to save colors to localStorage and read them here.
+		 //randomizeTrios();
+	 };
+
+	 document.querySelector("#colorInputs").addEventListener('change', setColor);
+	 document.querySelector("#trios").addEventListener('change', setTrios);
+	 document.querySelector("#draw1").addEventListener('click', pickOne);
+	 document.querySelector("#drawAll").addEventListener('click', pickAll);
+	 document.querySelector("#randomize").addEventListener('click', randomizeTrios);
+
+ })();
+</script>
+</body>
+</html>
